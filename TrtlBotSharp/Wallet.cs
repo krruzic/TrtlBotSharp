@@ -191,7 +191,7 @@ namespace TrtlBotSharp
             {
                 // Set transaction hash
                 TransactionHash = "";
-
+                Log(0, "Wallet", "Transaction Failed {0}!", Result.ToString());
                 // Return as unsuccessful
                 return false;
             }
@@ -259,7 +259,7 @@ namespace TrtlBotSharp
 
                                     // Check if transactions is locked
                                     else if ((int)Transaction["unlockTime"] > 3)
-                                        UnconfirmedTransactions.Add((string)Transaction["transationHash"], Transaction);
+                                        UnconfirmedTransactions.Add((string)Transaction["transactionHash"], Transaction);
                                 }
                             }
                         }
@@ -424,7 +424,7 @@ namespace TrtlBotSharp
                 }
                 catch (Exception e)
                 {
-                    Log(2, "Wallet", "Error while performing update loop: {0}", e.Message);
+                    Log(2, "Wallet", "Error while performing update loop: {0}\n\n{1}", e.Message, e.ToString());
                     continue;
                 }
 

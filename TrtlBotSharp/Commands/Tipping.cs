@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace TrtlBotSharp
 {
@@ -216,9 +217,22 @@ namespace TrtlBotSharp
                 await Context.Message.Author.SendMessageAsync(string.Format("You must register a wallet before you can deposit! Use {0}help if you need any help.",
                     TrtlBotSharp.botPrefix));
 
+            // some users don't have a PID due to legacy bots
+            if (String.IsNullOrWhiteSpace(TrtlBotSharp.GetPaymentId(Context.Message.Author.Id))) 
+            {
+                TrtlBotSharp.Log(0, "Deposit", $"{Context.Message.Author.Id} has PID: {TrtlBotSharp.GetPaymentId(Context.Message.Author.Id)}");
+                TrtlBotSharp.SetPaymentId(Context.Message.Author.Id, TrtlBotSharp.GetAddress(Context.Message.Author.Id));
+            }
+            JObject integratedAddress = new JObject
+            {
+                ["paymentId"] = TrtlBotSharp.GetPaymentId(Context.Message.Author.Id),
+                ["address"] = TrtlBotSharp.tipDefaultAddress
+            };
+            JObject Result = Request.RPC(TrtlBotSharp.walletHost, TrtlBotSharp.walletPort, "createIntegratedAddress", integratedAddress, TrtlBotSharp.walletRpcPassword);
+
             // Send reply
-            else await Context.Message.Author.SendMessageAsync(string.Format("**Deposit {0} to start tipping!**```Address:\n{1}\n\nPayment ID:\n{2}```", 
-                TrtlBotSharp.coinSymbol, TrtlBotSharp.tipDefaultAddress, TrtlBotSharp.GetPaymentId(Context.Message.Author.Id)));
+            await Context.Message.Author.SendMessageAsync(string.Format("**Deposit {0} to start tipping!**```Integrated Address: {1}```\n\n NOTE: YOUR ADDRESS HAS CHANGED!!", 
+                TrtlBotSharp.coinSymbol, Result["integratedAddress"]));
         }
 
         [Command("withdraw")]

@@ -31,12 +31,12 @@ namespace TrtlBotSharp
             var Response = new EmbedBuilder();
             Response.WithTitle("Current Price of TRTL: " + TrtlBotSharp.marketSource);
             Response.WithUrl(TrtlBotSharp.marketEndpoint);
-            Response.AddInlineField("Low", string.Format("{0} sats", Math.Round((decimal)CoinPrice["low"] * 100000000)));
-            Response.AddInlineField("Current", string.Format("{0} sats", Math.Round((decimal)CoinPrice["price"] * 100000000)));
-            Response.AddInlineField("High", string.Format("{0} sats", Math.Round((decimal)CoinPrice["high"] * 100000000)));
-            Response.AddInlineField(TrtlBotSharp.coinSymbol + "-USD", string.Format("${0:N5} USD", (decimal)CoinPrice["price"] * (decimal)BTCPrice["last"]));
-            Response.AddInlineField("Volume", string.Format("{0:N2} BTC", (decimal)CoinPrice["volume"]));
-            Response.AddInlineField("BTC-USD", string.Format("{0:C} USD", (decimal)BTCPrice["last"]));
+            Response.AddInlineField("Low", string.Format("{0} litoshis", Math.Round((decimal)CoinPrice["low"] * 100000000)));
+            Response.AddInlineField("Current", string.Format("{0} litoshis", Math.Round((decimal)CoinPrice["price"] * 100000000)));
+            Response.AddInlineField("High", string.Format("{0} litoshis", Math.Round((decimal)CoinPrice["high"] * 100000000)));
+            Response.AddInlineField(TrtlBotSharp.coinSymbol + "-USD", string.Format("${0:N5} USD", (decimal)CoinPrice["price"] * (decimal)BTCPrice["data"]["quotes"]["USD"]["price"]));
+            Response.AddInlineField("Volume", string.Format("{0:N2} LTC", (decimal)CoinPrice["volume"]));
+            Response.AddInlineField("LTC-USD", string.Format("{0:C} USD", (decimal)BTCPrice["data"]["quotes"]["USD"]["price"]));
 
             // Send reply
             if (Context.Guild != null && TrtlBotSharp.marketDisallowedServers.Contains(Context.Guild.Id))
@@ -69,7 +69,7 @@ namespace TrtlBotSharp
 
             // Begin building a response
             string Response = string.Format("{0}'s market cap is **{1:c}** USD", TrtlBotSharp.coinName,
-                (decimal)CoinPrice["price"] * (decimal)BTCPrice["last"] * TrtlBotSharp.GetSupply());
+                (decimal)CoinPrice["price"] * (decimal)BTCPrice["data"]["quotes"]["USD"]["price"] * TrtlBotSharp.GetSupply());
 
             // Send reply
             if (Context.Guild != null && TrtlBotSharp.marketDisallowedServers.Contains(Context.Guild.Id))

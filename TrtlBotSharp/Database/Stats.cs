@@ -23,6 +23,15 @@ namespace TrtlBotSharp
             // Execute command
             Command.ExecuteNonQuery();
         }
+        
+//        public static void TopTen()
+//        {
+//            SqliteCommand Command = new SqliteCommand("SELECT userid,sum(totalamount) as total FROM tips WHERE type='OUT' GROUP BY userid ORDER BY total DESC LIMIT 10;")       
+//            using (SqliteDataReader Reader = Command.ExecuteReader())
+//            {
+//                if (Reader.Read())
+//                {
+                    
 
         // Update user stats
         // Adds a tip to user's stats

@@ -61,6 +61,21 @@ namespace TrtlBotSharp
             // Return generated payment ID
             return PaymentId;
         }
+	// Sets a wallet's paymentID in the database
+        public static void SetPaymentId(ulong UID, string Address)
+        {
+            // Generate a new payment ID
+            string PaymentId = GeneratePaymentId(Address);
+
+            // Create Sql command
+            SqliteCommand Command = new SqliteCommand("UPDATE users SET paymentid = @paymentid WHERE uid = @uid and address = @address", Database);
+            Command.Parameters.AddWithValue("uid", UID);
+            Command.Parameters.AddWithValue("address", Address);
+            Command.Parameters.AddWithValue("paymentid", PaymentId.ToUpper());
+
+            // Execute command
+            Command.ExecuteNonQuery();
+        }
 
         // Updates a wallet's address the database
         public static void UpdateWallet(ulong UID, string Address)
